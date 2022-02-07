@@ -1,20 +1,24 @@
+// see email from 07feb22 for help. 
+
+
 class Game {
     constructor(HEIGHT = 6, WIDTH = 7) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
         this.board = [];
         this.top = document.createElement('tr');
+        this.handleGameClick = this.handleClick.bind(this);
+        this.currPlayer = 1
 
     };
     makeBoard() {
         for (let y = 0; y < this.HEIGHT; y++) { this.board.push(Array.from({ length: this.WIDTH })) }
     };
     makeHTMLBoard() {
-        this.board = document.getElementById('board');
-
+        const board = document.getElementById('board');
         // make column tops (clickable area for adding a piece to that column)
         this.top.setAttribute('id', 'column-top');
-        this.top.addEventListener('click', this.handleClick);
+        this.top.addEventListener('click', this.handleGameClick);
 
         for (let x = 0; x < this.WIDTH; x++) {
             const headCell = document.createElement('td');
@@ -22,7 +26,7 @@ class Game {
             this.top.append(headCell);
         }
 
-        this.board.append(this.top);
+        board.append(this.top);
 
         // make main part of this.board
         for (let y = 0; y < this.HEIGHT; y++) {
@@ -34,7 +38,7 @@ class Game {
                 row.append(cell);
             }
 
-            this.board.append(row);
+            board.append(row);
         }
     };
     findSpotForCol(x) {
@@ -48,7 +52,7 @@ class Game {
     placeInTable(y, x) {
         const piece = document.createElement('div');
         piece.classList.add('piece');
-        piece.classList.add(`p${currPlayer}`);
+        piece.classList.add(`p${this.currPlayer}`);
         piece.style.top = -50 * (y + 2);
 
         const spot = document.getElementById(`${y}-${x}`);
@@ -57,6 +61,7 @@ class Game {
     endGame(msg) {
         alert(msg);
     };
+
     handleClick(evt) {
         // get x from ID of clicked cell
         const x = +evt.target.id;
@@ -68,11 +73,11 @@ class Game {
         }
 
         // place piece in this.board and add to HTML table
-        this.board[y][x] = currPlayer;
+        this.board[y][x] = this.currPlayer;
         this.placeInTable(y, x);
 
         // check for win
-        if (checkForWin()) {
+        if (this.checkForGameWin()) {
             return endGame(`Player ${currPlayer} won!`);
         }
 
@@ -82,8 +87,9 @@ class Game {
         }
 
         // switch players
-        currPlayer = currPlayer === 1 ? 2 : 1;
+        this.currPlayer = this.currPlayer === 1 ? 2 : 1;
     };
+    handleGameClick = this.handleClick.bind(this);
     checkForWin() {
         function _win(cells) {
             // Check four cells to see if they're all color of current player
@@ -116,6 +122,7 @@ class Game {
             }
         }
     }
+    checkForGameWin = this.checkForWin.bind(this);
 }
 
 const myGame = new Game();
