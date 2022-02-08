@@ -7,7 +7,7 @@ class Game {
         this.WIDTH = WIDTH;
         this.board = [];
         this.top = document.createElement('tr');
-        this.handleGameClick = this.handleClick.bind(this);
+        // this.handleGameClick = this.handleClick.bind(this);
         this.currPlayer = 1
 
     };
