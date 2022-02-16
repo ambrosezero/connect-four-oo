@@ -11,7 +11,11 @@ class Game {
         this.currPlayer = 1
         this.makeBoard();
         this.makeHTMLBoard();
-
+        this.gameWon = false;
+        const playerOneColor = document.getElementById('player-one-color').value;
+        const playerOne = new player(playerOneColor);
+        const playerTwoColor = document.getElementById('player-two-color').value;
+        const playerTwo = new player(playerTwoColor);
     };
     makeBoard() {
         // console.log('makeBoard() this =', this)
@@ -21,6 +25,7 @@ class Game {
         // console.log('makeHTMLBoard() this =', this)
 
         const board = document.getElementById('board');
+        board.innerHTML = '<table id="board"></table>'
         // make column tops (clickable area for adding a piece to that column)
         this.top.setAttribute('id', 'column-top');
         this.top.addEventListener('click', this.handleGameClick);
@@ -80,35 +85,41 @@ class Game {
         console.log('handleClick() this =', this)
 
         // get x from ID of clicked cell
-        const x = +evt.target.id;
+        if (!this.gameWon) {
+            const x = +evt.target.id;
 
-        // get next spot in column (if none, ignore click)
-        const y = this.findSpotForCol(this.x);
-        if (y === null) {
-            return;
+            // get next spot in column (if none, ignore click)
+            const y = this.findSpotForCol(x);
+            if (y === null) {
+                return;
+            }
+            console.log(!this.board[y][x])
+            // place piece in this.board and add to HTML table
+            console.log(this.board[y][x])
+            this.board[y][x] = this.currPlayer;
+            console.log(this.board[y][x])
+            // console.log(this.board[y][x])
+
+            this.placeInTable(y, x);
+
+            // check for win
+            // console.log(this.HEIGHT)
+            if (this.checkForGameWin()) {
+                this.gameWon = true;
+                return this.endGame(`Player ${this.currPlayer} won!`);
+            }
+
+            // check for tie
+            if (this.board.every(row => row.every((cell) => { cell }))) {
+                return endGame('Tie!');
+            }
+
+            // switch players
+            this.currPlayer = this.currPlayer === 1 ? 2 : 1;
         }
-        console.log(!this.board[y][x])
-        // place piece in this.board and add to HTML table
-        console.log(this.board[y][x])
-        this.board[y][x] = this.currPlayer;
-        console.log(this.board[y][x])
-        // console.log(this.board[y][x])
-
-        this.placeInTable(y, x);
-
-        // check for win
-        // console.log(this.HEIGHT)
-        if (this.checkForGameWin()) {
-            return endGame(`Player ${currPlayer} won!`);
+        else {
+            return this.endGame(`Player ${this.currPlayer} won!`);
         }
-
-        // check for tie
-        if (this.board.every(row => row.every(cell => cell))) {
-            return endGame('Tie!');
-        }
-
-        // switch players
-        this.currPlayer = this.currPlayer === 1 ? 2 : 1;
     };
     handleGameClick = this.handleClick.bind(this);
     checkForWin() {
@@ -150,30 +161,14 @@ class Game {
     checkForGameWin = this.checkForWin.bind(this);
 }
 
-const myGame = new Game();
+class player {
+    constructor(playerColor) {
+        this.playerColor = playerColor
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const startNewGameButton = document.getElementById('start-new-game-button').addEventListener('click', (evt) => {
+    let myGame = new Game();
+})
 
 
