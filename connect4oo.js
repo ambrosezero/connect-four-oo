@@ -7,7 +7,6 @@ class Game {
         this.WIDTH = WIDTH;
         this.board = [];
         this.top = document.createElement('tr');
-        // this.handleGameClick = this.handleClick.bind(this);
         this.makeBoard();
         this.makeHTMLBoard();
         this.gameWon = false;
@@ -16,11 +15,9 @@ class Game {
         this.currPlayer = playerOne;
     };
     makeBoard() {
-        // console.log('makeBoard() this =', this)
         for (let y = 0; y < this.HEIGHT; y++) { this.board.push(Array.from({ length: this.WIDTH })) }
     };
     makeHTMLBoard() {
-        // console.log('makeHTMLBoard() this =', this)
 
         const board = document.getElementById('board');
         board.innerHTML = '<table id="board"></table>'
@@ -50,25 +47,18 @@ class Game {
         }
     };
     findSpotForCol(x) {
-        console.log('findSpotForCol() this =', this)
-        console.log(this.board)
         for (let y = this.HEIGHT - 1; y >= 0; y--) {
-            // console.log(this.HEIGHT)
-            console.log(this.board[y][x])
             if (!this.board[y][x]) {
-                console.log(!this.board[y][x])
                 return y;
             }
         }
         return null;
     };
     placeInTable(y, x) {
-        console.log("current player is", this.currPlayer)
 
 
         const piece = document.createElement('div');
         piece.classList.add('piece');
-        // piece.classList.add(`p${this.currPlayer}`);
         piece.style.backgroundColor = this.currPlayer.playerColor;
         piece.style.top = -50 * (y + 2);
 
@@ -76,13 +66,10 @@ class Game {
         spot.append(piece);
     };
     endGame(msg) {
-        console.log('endGame() this =', this)
-
         alert(msg);
     };
 
     handleClick(evt) {
-        console.log('handleClick() this =', this)
 
         // get x from ID of clicked cell
         if (!this.gameWon) {
@@ -93,17 +80,12 @@ class Game {
             if (y === null) {
                 return;
             }
-            console.log(!this.board[y][x])
             // place piece in this.board and add to HTML table
-            console.log(this.board[y][x])
             this.board[y][x] = this.currPlayer;
-            console.log(this.board[y][x])
-            // console.log(this.board[y][x])
 
             this.placeInTable(y, x);
 
             // check for win
-            // console.log(this.HEIGHT)
             if (this.checkForGameWin()) {
                 this.gameWon = true;
                 return this.endGame(`Player ${this.currPlayer} won!`);
@@ -123,10 +105,8 @@ class Game {
     };
     handleGameClick = this.handleClick.bind(this);
     checkForWin() {
-        console.log('checkForWin() this =', this)
 
         function _win(cells) {
-            // console.log('_win() this =', this)
 
             // Check four cells to see if they're all color of current player
             //  - cells: list of four (y, x) cells
@@ -172,7 +152,7 @@ const startNewGameButton = document.getElementById('start-new-game-button').addE
     const playerOne = new player(playerOneColor);
     const playerTwoColor = document.getElementById('player-two-color').value;
     const playerTwo = new player(playerTwoColor);
-    new Game();
+    new Game(6, 7, playerOne, playerTwo);
 })
 
 
