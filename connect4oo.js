@@ -2,20 +2,18 @@
 
 
 class Game {
-    constructor(HEIGHT = 6, WIDTH = 7) {
+    constructor(HEIGHT = 6, WIDTH = 7, playerOne, playerTwo) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
         this.board = [];
         this.top = document.createElement('tr');
         // this.handleGameClick = this.handleClick.bind(this);
-        this.currPlayer = 1
         this.makeBoard();
         this.makeHTMLBoard();
         this.gameWon = false;
-        const playerOneColor = document.getElementById('player-one-color').value;
-        const playerOne = new player(playerOneColor);
-        const playerTwoColor = document.getElementById('player-two-color').value;
-        const playerTwo = new player(playerTwoColor);
+
+        this.players = [playerOne, playerTwo];
+        this.currPlayer = playerOne;
     };
     makeBoard() {
         // console.log('makeBoard() this =', this)
@@ -65,11 +63,13 @@ class Game {
         return null;
     };
     placeInTable(y, x) {
-        console.log('placeInTable() this =', this)
+        console.log("current player is", this.currPlayer)
+
 
         const piece = document.createElement('div');
         piece.classList.add('piece');
-        piece.classList.add(`p${this.currPlayer}`);
+        // piece.classList.add(`p${this.currPlayer}`);
+        piece.style.backgroundColor = this.currPlayer.playerColor;
         piece.style.top = -50 * (y + 2);
 
         const spot = document.getElementById(`${y}-${x}`);
@@ -115,7 +115,7 @@ class Game {
             }
 
             // switch players
-            this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+            this.currPlayer = this.currPlayer === this.players[0] ? this.players[1] : this.players[0];
         }
         else {
             return this.endGame(`Player ${this.currPlayer} won!`);
@@ -168,7 +168,11 @@ class player {
 }
 
 const startNewGameButton = document.getElementById('start-new-game-button').addEventListener('click', (evt) => {
-    let myGame = new Game();
+    const playerOneColor = document.getElementById('player-one-color').value;
+    const playerOne = new player(playerOneColor);
+    const playerTwoColor = document.getElementById('player-two-color').value;
+    const playerTwo = new player(playerTwoColor);
+    new Game();
 })
 
 
